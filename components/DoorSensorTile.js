@@ -8,6 +8,7 @@ let gmtToEST = (date) => {
 };
 
 export default function DoorSensorTile({ name, id, battery, lastUpdated }) {
+  const [doors, setDoors] = useState([]);
   const [opened, setOpened] = useState(false);
   const audioRefOpen = useRef(null);
   const audioRefClose = useRef(null);
@@ -19,7 +20,8 @@ export default function DoorSensorTile({ name, id, battery, lastUpdated }) {
         data.id == id &&
         data.r === "sensors" &&
         data.state &&
-        !data.state.buttonevent
+        !data.state.buttonevent &&
+        data.state.open != opened
       ) {
         setLastActivity(gmtToEST(data.state.lastupdated));
         if (data.state.open) {

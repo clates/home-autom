@@ -32,7 +32,7 @@ export default function LightGroups({ groups }) {
       {menuOpen && (
         <div
           style={{ top: menuPos[1], left: menuPos[0], position: "absolute" }}
-          className="rounded-3xl border-4 bg-purple-300 w-80 flex flex-col justify-center items-center p-3"
+          className="rounded-3xl border-4 bg-primary-light w-80 flex flex-col justify-center items-center p-3"
         >
           {[
             { name: "red", hue: 1125 },
@@ -44,7 +44,7 @@ export default function LightGroups({ groups }) {
             return (
               <div
                 key={color.name}
-                className="rounded-full bg-purple-500 text-white h-10 w-4/5 m-2 flex justify-center items-center"
+                className="rounded-full bg-primary-dark text-secondary-light h-10 w-11/12 m-2 flex justify-center items-center"
                 onClick={() => {
                   setLight(color.hue, color.brightness, color.saturation);
                   setMenuOpen(false);
@@ -65,7 +65,7 @@ export default function LightGroups({ groups }) {
           return (
             <div
               key={group.id}
-              className="rounded-full bg-purple-500 text-white h-10 w-4/5 m-2 flex justify-center items-center"
+              className="rounded-full bg-primary-dark text-secondary-light h-10 w-full m-2 flex justify-center items-center"
               onClick={(e) => {
                 console.log(e);
                 e.preventDefault();

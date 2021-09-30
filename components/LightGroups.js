@@ -1,11 +1,8 @@
 import GenericTile from "./GenericTile";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
-  setLightState,
-  pulseLight,
   setLightingGroupState,
 } from "../services/lightsControl";
-import { registerLightsCallback } from "../services/subscriber";
 
 export default function LightGroups({ groups }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,7 +20,7 @@ export default function LightGroups({ groups }) {
     }
   };
 
-  let setLight = (color, brightness = 100, saturation = 100) => {
+  let setLight = (color, brightness , saturation = 100) => {
     setLightingGroupState(activeGroup, color, 10, brightness, saturation);
   };
 
@@ -32,7 +29,7 @@ export default function LightGroups({ groups }) {
       {menuOpen && (
         <div
           style={{ top: menuPos[1], left: menuPos[0], position: "absolute" }}
-          className="rounded-3xl border-4 bg-primary-light w-80 flex flex-col justify-center items-center p-3"
+          className="rounded-3xl border-4 border-primary-dark bg-primary-light w-80 flex flex-col justify-center items-center p-3"
         >
           {[
             { name: "red", hue: 1125 },
@@ -44,7 +41,7 @@ export default function LightGroups({ groups }) {
             return (
               <div
                 key={color.name}
-                className="rounded-full bg-primary-dark text-secondary-light h-10 w-11/12 m-2 flex justify-center items-center"
+                className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-11/12 m-2 flex justify-center items-center"
                 onClick={() => {
                   setLight(color.hue, color.brightness, color.saturation);
                   setMenuOpen(false);
@@ -65,7 +62,7 @@ export default function LightGroups({ groups }) {
           return (
             <div
               key={group.id}
-              className="rounded-full bg-primary-dark text-secondary-light h-10 w-full m-2 flex justify-center items-center"
+              className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-full m-2 flex items-center pl-3"
               onClick={(e) => {
                 console.log(e);
                 e.preventDefault();

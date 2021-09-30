@@ -1,0 +1,5 @@
+
+export default {
+  CAMERA_WS_URI: "192.168.88.212:9001",
+  IOT_REST_URI: "192.168.88.212:80"
+}

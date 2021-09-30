@@ -1,5 +1,7 @@
+import constants from "../constants/constants";
+
 export function setLightState(id, hue, brightness = 100, saturation = 100) {
-  fetch(`http://10.4.18.8/api/F83A894B24/lights/${id}/state`, {
+  fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/lights/${id}/state`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -15,11 +17,11 @@ export function setLightingGroupState(
   id,
   hue,
   transitionTime = 10,
-  brightness = 100,
+  brightness = 3,
   saturation = 100
 ) {
   console.log("Setting Lighting Group State", id, hue);
-  fetch(`http://10.4.18.8/api/F83A894B24/groups/${id}/action`, {
+  fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/groups/${id}/action`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +35,7 @@ export function setLightingGroupState(
   });
 }
 export function fadeTo(id, duration, hue, brightness = 100, saturation = 100) {
-  fetch(`http://10.4.18.8/api/F83A894B24/lights/${id}`, {
+  fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/lights/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +65,7 @@ export function pulseLight(id) {
   var brightness = 100;
   var direction = false;
   let intervId = setInterval(() => {
-    fetch(`http://10.4.18.8/api/F83A894B24/lights/${id}/state`, {
+    fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/lights/${id}/state`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

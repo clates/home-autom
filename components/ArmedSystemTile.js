@@ -15,9 +15,9 @@ export default function ArmedSystemTile() {
   const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
-    registerSensorCallback((data) => {
-      console.log(data);
+    registerSensorCallback("switch1", (data) => {
       if (data.state && data.state.lastupdated != lastUpdated) {
+        console.log(data.state)
         //Single Press
         if (data.state.buttonevent === 1002) {
           audioRefPop.current.play();

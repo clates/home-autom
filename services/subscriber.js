@@ -1,9 +1,9 @@
-let sensorCallbacks = [];
+let sensorCallbacks = {};
 let lightsCallbacks = [];
 let zigbee;
 
-export function registerSensorCallback(cb) {
-  sensorCallbacks.push(cb);
+export function registerSensorCallback(key, cb) {
+  sensorCallbacks[key] = cb; //TODO FIX ME FK
 }
 export function registerLightsCallback(cb) {
   lightsCallbacks.push(cb);
@@ -15,14 +15,12 @@ export function setWS(wsIn) {
     try {
       sensorData = JSON.parse(e.data);
     } catch (e) {
-      console.error();
+      console.error(e);
     }
-    if (sensorData.r === "sensors") {
-      sensorCallbacks.forEach((cb) => {
-        cb(sensorData);
-      });
+    if (sensorData && sensorData.r === "sensors") {
+      Object.keys(sensorCallbacks).forEach(key => sensorCallbacks[key](sensorData))
     }
-    if (sensorData.r === "lights") {
+    if (sensorData && sensorData.r === "lights") {
       lightsCallbacks.forEach((cb) => {
         cb(sensorData);
       });

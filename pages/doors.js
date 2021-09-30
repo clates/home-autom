@@ -11,6 +11,7 @@ export default function Doors() {
             battery={doorSensor.config.battery}
             name={doorSensor.name}
             lastUpdated={doorSensor.state.lastupdated}
+            open={doorSensor.state.open}
             />
         ))}
         </div>

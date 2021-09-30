@@ -48,7 +48,7 @@ export default function LightTile({
       {menuOpen && (
         <div
           style={{ top: menuPos[1], left: menuPos[0], position: "absolute" }}
-          className="rounded-3xl border-4 bg-purple-300 w-80 flex flex-col justify-center items-center p-3"
+          className="rounded-3xl border-4 border-primary-dark bg-primary-light w-80 flex flex-col justify-center items-center p-3"
         >
           {[
             { name: "red", hue: 1125 },
@@ -60,7 +60,7 @@ export default function LightTile({
             return (
               <div
                 key={color.name}
-                className="rounded-full bg-purple-500 text-white h-10 w-4/5 m-2 flex justify-center items-center"
+                className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-primary-light hover:bg-primary-dark text-secondary-light h-10 w-11/12 m-2 flex justify-center items-center"
                 onClick={() => {
                   setLight(color.hue, color.brightness, color.saturation);
                   setMenuOpen(false);
@@ -74,8 +74,8 @@ export default function LightTile({
             );
           })}
           <div
-            className="rounded-full bg-purple-500 text-white h-10 w-4/5 m-2 flex justify-center items-center"
-            onClick={() => {
+                className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-primary-light hover:bg-primary-dark text-secondary-light h-10 w-11/12 m-2 flex justify-center items-center"
+                onClick={() => {
               pulseLight(id);
               setMenuOpen(false);
             }}
@@ -101,9 +101,9 @@ export default function LightTile({
               "%",
           }}
         >
-          <img src={"/bulb.svg"} className="h-40 pt-6"></img>
+          <img src={"/bulb.svg"} className="h-20 lg:h-40 pt-6"></img>
         </div>
-        <div className="grid grid-cols-2 gap-1 pt-3 text-xs w-full">
+        <div className="grid-cols-2 gap-1 pt-3 text-xs w-full hidden lg:grid">
           <div className="font-bold">{on ? "ON" : "OFF"}</div>
           <div>
             <span className="font-bold">Hue:</span> {hue}

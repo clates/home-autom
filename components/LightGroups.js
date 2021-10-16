@@ -37,7 +37,7 @@ export default function LightGroups({ groups }) {
             { name: "blue", hue: 43000 },
             { name: "green", hue: 118 * 182 },
             { name: "white", hue: 0, brightness: 100, saturation: 0, ct: 40 },
-            { name: "warm", hue: 0, brightness: 100, saturation: 0, ct: 400 },
+            { name: "warm", hue: 0, brightness: 50, saturation: 0, ct: 400 },
           ].map((color) => {
             return (
               <div

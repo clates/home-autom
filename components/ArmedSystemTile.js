@@ -18,14 +18,13 @@ export default function ArmedSystemTile() {
 
   useEffect(() => {
     registerSensorCallback("switch1", (data) => {
-      if (data.id = "10" && data.state && data.state.buttonevent === 1001) {
+      if (data.id === "10" && data.state && data.state.buttonevent === 1001) {
         audioRefBills.current.play();
         setLastUpdated(data.state.lastupdated);
         goBills(3);
         return;
       }
       if (data.state && data.state.lastupdated != lastUpdated) {
-        console.log(data.state)
         //Single Press
         if (data.state.buttonevent === 1002) {
           audioRefPop.current.play();

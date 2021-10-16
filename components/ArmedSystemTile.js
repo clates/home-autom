@@ -4,6 +4,7 @@ import useToggle from "../hooks/useToggle";
 import {
   setLightingGroupState,
   setLightState,
+  goBills
 } from "../services/lightsControl";
 import { registerSensorCallback } from "../services/subscriber";
 
@@ -12,10 +13,17 @@ export default function ArmedSystemTile() {
   const audioRef = useRef(null);
   const audioRefPop = useRef(null);
   const audioRefPositive = useRef(null);
+  const audioRefBills = useRef(null);
   const [lastUpdated, setLastUpdated] = useState("");
 
   useEffect(() => {
     registerSensorCallback("switch1", (data) => {
+      if (data.id = "10" && data.state && data.state.buttonevent === 1001) {
+        audioRefBills.current.play();
+        setLastUpdated(data.state.lastupdated);
+        goBills(3);
+        return;
+      }
       if (data.state && data.state.lastupdated != lastUpdated) {
         console.log(data.state)
         //Single Press
@@ -51,6 +59,7 @@ export default function ArmedSystemTile() {
       <audio ref={audioRef} src={"/car-lock-sound-effect.mp3"} />
       <audio ref={audioRefPop} src={"/pop-19.wav"} />
       <audio ref={audioRefPositive} src={"/gentle_pop.wav"} />
+      <audio ref={audioRefBills} src={"/shout-song.mp3"} />
     </GenericTile>
   );
 }

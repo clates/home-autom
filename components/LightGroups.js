@@ -1,7 +1,7 @@
 import GenericTile from "./GenericTile";
 import { useState } from "react";
 import {
-  setLightingGroupState,
+  setLightingGroupState, goBills
 } from "../services/lightsControl";
 
 export default function LightGroups({ groups }) {
@@ -20,8 +20,8 @@ export default function LightGroups({ groups }) {
     }
   };
 
-  let setLight = (color, brightness , saturation = 100) => {
-    setLightingGroupState(activeGroup, color, 10, brightness, saturation);
+  let setLight = (color, brightness = 100, saturation = 100, ct = null) => {
+    setLightingGroupState(activeGroup, color, 0, brightness, saturation, ct);
   };
 
   return (
@@ -36,14 +36,15 @@ export default function LightGroups({ groups }) {
             { name: "yellow", hue: 50 * 182, saturation: 85 },
             { name: "blue", hue: 43000 },
             { name: "green", hue: 118 * 182 },
-            { name: "white", hue: 0, brightness: 100, saturation: 0 },
+            { name: "white", hue: 0, brightness: 100, saturation: 0, ct: 40 },
+            { name: "warm", hue: 0, brightness: 100, saturation: 0, ct: 400 },
           ].map((color) => {
             return (
               <div
                 key={color.name}
                 className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-11/12 m-2 flex justify-center items-center"
                 onClick={() => {
-                  setLight(color.hue, color.brightness, color.saturation);
+                  setLight(color.hue, color.brightness, color.saturation, color.ct);
                   setMenuOpen(false);
                 }}
               >
@@ -54,6 +55,15 @@ export default function LightGroups({ groups }) {
               </div>
             );
           })}
+          <div
+            className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-11/12 m-2 flex justify-center items-center"
+            onClick={() => {
+              goBills(activeGroup);
+              setMenuOpen(false);
+            }}
+          >
+            Go Bills!
+          </div>
           {/* <div className="rounded-full bg-purple-500 text-white h-10 w-4/5 m-2 flex justify-center items-center" onClick={() => {pulseLight(id); setMenuOpen(false)}}>Set Pulse</div> */}
         </div>
       )}
@@ -64,7 +74,6 @@ export default function LightGroups({ groups }) {
               key={group.id}
               className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-full m-2 flex items-center pl-3"
               onClick={(e) => {
-                console.log(e);
                 e.preventDefault();
                 handleClick(e.pageX, e.pageY, group.id);
               }}

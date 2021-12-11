@@ -18,7 +18,6 @@ export default function Home() {
           <CameraTile key={camera.cameraName} cameraName={camera.cameraName} data={camera.data} />
         ))}
       </div>
-      <ArmedSystemTile />
       <div className="flex-grow w-11/12 grid xl:grid-cols-4 grid-cols-2 hidden md:grid ">
         {doorSensors.map((doorSensor) => (
           <DoorSensorTile
@@ -36,7 +35,7 @@ export default function Home() {
           doors={doorSensors}
         />
       </div>
-      <div className="flex-grow content-evenly w-11/12 grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 ">
+      <div className="flex-grow content-evenly w-11/12 hidden md:grid grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 ">
         {lightList.map((light) => (
           <LightTile
             key={light.id}
@@ -49,6 +48,7 @@ export default function Home() {
           />
         ))}
       </div>
+      <ArmedSystemTile />
     </>
   );
 }

@@ -9,34 +9,35 @@ import { useLightGroupsContext } from "../hooks/useLightGroups";
 import constants from "../constants/constants";
 
 export default function Layout({ children }) {
-    const doorSensors = useDoorSensorsContext();
-    const lightGroups = useLightGroupsContext();
-    useEffect(() => setWS(new WebSocket("ws://" + constants.CAMERA_WS_URI)), []);
+  const doorSensors = useDoorSensorsContext();
+  const lightGroups = useLightGroupsContext();
+  useEffect(() => setWS(new WebSocket("ws://" + constants.CAMERA_WS_URI)), []);
 
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Head>
-                <title>🏠🔒⚙️ Home</title>
-                <link rel="icon" href="/favicon.ico" />
-                <meta name="mobile-web-app-capable" content="yes" />
-            </Head>
-            <NavBar />
-            <div className="flex flex-row flex-grow">
-                {(doorSensors.length || lightGroups.length) ? (
-                    <div className="hidden md:inline bg-primary-light">
-                        <div className="w-64">
-                            {doorSensors.length && <DoorSummary doors={doorSensors} /> }
-                            {lightGroups.length && <LightGroups groups={lightGroups} /> }
-                        </div>
-                    </div>
-                ) : null}
-                <div className="flex flex-col items-center justify-center flex-grow">
-                    {children}
-                </div>
+  return (
+    <div className="flex flex-col min-h-screen max-h-screen">
+      <Head>
+        <title>🏠🔒⚙️ Home</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta httpEquiv="refresh" content="600"></meta>
+      </Head>
+      <NavBar />
+      <div className="flex flex-row flex-grow max-h-full overflow-y-hidden">
+        {(doorSensors.length || lightGroups.length) ? (
+          <div className="hidden md:inline bg-primary-light">
+            <div className="w-64">
+              {doorSensors.length && <DoorSummary doors={doorSensors} />}
+              {lightGroups.length && <LightGroups groups={lightGroups} />}
             </div>
-            <footer className="flex items-center justify-center w-full h-10 border-t bg-secondary-dark text-secondary-light">
-                Home Automation System
-            </footer>
+          </div>
+        ) : null}
+        <div className="flex flex-col items-center flex-grow overflow-y-scroll">
+          {children}
         </div>
-    );
+      </div>
+      <footer className="flex items-center justify-center w-full h-10 border-t bg-secondary-dark text-secondary-light">
+        Home Automation System
+      </footer>
+    </div>
+  );
 }

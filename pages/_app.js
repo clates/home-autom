@@ -155,13 +155,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
-      <Head>
-        {
-          //meta refresh tag is measured in seconds
-        }
-        <meta http-equiv="refresh" content="600"></meta>
-      </Head>
+    <div className="max-h-screen">
       <CamerasProvider value={cameraList}>
         <LightListProvider value={lightList}>
           <LightGroupsProvider value={lightGroups}>
@@ -176,7 +170,7 @@ function MyApp({ Component, pageProps }) {
 
       <audio ref={audioRefOpen} src={"/doorbell-ding-dong-sound-effect.mp3"} />
       <audio ref={audioRefClose} src={"/door-close.wav"} />
-    </>
+    </div>
   );
 }
 

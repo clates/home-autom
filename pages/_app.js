@@ -7,6 +7,7 @@ import { LightListProvider } from "../hooks/useLightList";
 import { registerSensorCallback } from "../services/subscriber";
 import { CamerasProvider } from "../hooks/useCameras";
 import constants from "../constants/constants";
+import Head from "next/head"
 
 function MyApp({ Component, pageProps }) {
   const [lightGroups, setLightGroups] = useState([]);
@@ -155,6 +156,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        {
+          //meta refresh tag is measured in seconds
+        }
+        <meta http-equiv="refresh" content="600"></meta>
+      </Head>
       <CamerasProvider value={cameraList}>
         <LightListProvider value={lightList}>
           <LightGroupsProvider value={lightGroups}>

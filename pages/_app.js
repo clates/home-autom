@@ -16,6 +16,52 @@ function MyApp({ Component, pageProps }) {
   const [cameraList, setCameraList] = useState([])
   const audioRefOpen = useRef(null);
   const audioRefClose = useRef(null);
+  const connect = () => {
+    let ws = new WebSocket(`ws://${constants.CAMERA_WS_URI}`);
+
+    // Set event handlers.
+    ws.onopen = function () {
+      console.log("Websocket for camera feeds connected.")
+    };
+
+    ws.onmessage = function (e) {
+      let data = {};
+      try {
+        data = JSON.parse(e.data);
+      } catch (e) {
+        console.error();
+      }
+
+      if (data.isVideo) {
+        let currentCamera = cameraList.filter(camera => camera.cameraName === data.cameraName)
+        if (currentCamera.length > 0) {
+          currentCamera[0] = {
+            cameraName: data.cameraName, data: "data:image/jpg;base64," +
+              data.data.substring(2, data.data.length - 1)
+          }
+          cameraList[cameraList.findIndex(camera => camera.cameraName === data.cameraName)] = currentCamera[0]
+          setCameraList([...cameraList])
+        } else {
+          cameraList.push({
+            cameraName: data.cameraName, data: "data:image/jpg;base64," +
+              data.data.substring(2, data.data.length - 1)
+          })
+        }
+      } else {
+        //Some non-video data
+      }
+    };
+
+    ws.onclose = function () {
+      console.log("Closed for non-error reason");
+      setTimeout(() => connect(), 60 * 1000)
+    };
+
+    ws.onerror = function (e) {
+      console.log(e);
+      setTimeout(() => connect(), 60 * 1000)
+    };
+  }
 
   useEffect(() => {
     fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/groups/`, {
@@ -104,48 +150,7 @@ function MyApp({ Component, pageProps }) {
 
   //Attach to websox for camera feed(s)
   useEffect(() => {
-    let ws = new WebSocket(`ws://${constants.CAMERA_WS_URI}`);
-
-    // Set event handlers.
-    ws.onopen = function () {
-      console.log("Websocket for camera feeds connected.")
-    };
-
-    ws.onmessage = function (e) {
-      let data = {};
-      try {
-        data = JSON.parse(e.data);
-      } catch (e) {
-        console.error();
-      }
-
-      if (data.isVideo) {
-        let currentCamera = cameraList.filter(camera => camera.cameraName === data.cameraName)
-        if (currentCamera.length > 0) {
-          currentCamera[0] = {
-            cameraName: data.cameraName, data: "data:image/jpg;base64," +
-              data.data.substring(2, data.data.length - 1)
-          }
-          cameraList[cameraList.findIndex(camera => camera.cameraName === data.cameraName)] = currentCamera[0]
-          setCameraList([...cameraList])
-        } else {
-          cameraList.push({
-            cameraName: data.cameraName, data: "data:image/jpg;base64," +
-              data.data.substring(2, data.data.length - 1)
-          })
-        }
-      } else {
-        //Some non-video data
-      }
-    };
-
-    ws.onclose = function () {
-      console.log();
-    };
-
-    ws.onerror = function (e) {
-      console.log(e);
-    };
+    connect()
   }, []);
 
   return (

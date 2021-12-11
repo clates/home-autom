@@ -13,7 +13,7 @@ export default function Home() {
   const cameraList = useCamerasContext();
   return (
     <>
-      <div className="flex-grow w-11/12 grid xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 ">
+      <div className="flex-grow w-11/12 grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 ">
         {cameraList.map(camera => (
           <CameraTile key={camera.cameraName} cameraName={camera.cameraName} data={camera.data} />
         ))}

@@ -25,7 +25,7 @@ export default function Layout({ children }) {
       <div className="flex flex-row flex-grow max-h-full overflow-y-hidden">
         {(doorSensors.length || lightGroups.length) ? (
           <div className="hidden md:inline bg-primary-light">
-            <div className="w-64">
+            <div className="w-60">
               {doorSensors.length && <DoorSummary doors={doorSensors} />}
               {lightGroups.length && <LightGroups groups={lightGroups} />}
             </div>

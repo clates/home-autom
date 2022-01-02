@@ -10,6 +10,7 @@ export function setLightState(id, hue, brightness = 100, saturation = 100, ct = 
       hue: hue,
       bri: parseInt(brightness * 2.54),
       sat: parseInt(saturation * 2.54),
+      transitiontime: 0,
     }),
   });
 }

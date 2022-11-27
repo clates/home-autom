@@ -97,7 +97,19 @@ function MyApp({ Component, pageProps }) {
 
     setDoorSensors(old => {
       const doorToUpdate = old.find(({ name }) => name === doorName)
-      console.log(old)
+
+      if (contact === old.contact) {
+        if (contact) {
+          audioRefOpen.current.pause();
+          audioRefClose.current.fastSeek && audioRefOpen.current.fastSeek(0);
+          audioRefClose.current.play();
+        } else {
+          audioRefOpen.current.play();
+          audioRefClose.current.pause();
+          audioRefClose.current.fastSeek && audioRefClose.current.fastSeek(0);
+        }
+      }
+
       return [{
         ...doorToUpdate,
         battery: battery,
@@ -105,16 +117,6 @@ function MyApp({ Component, pageProps }) {
         open: !contact,
       }, ...old.filter(({ name }) => name !== doorName)]
     })
-
-    if (contact) {
-      audioRefOpen.current.pause();
-      audioRefClose.current.fastSeek && audioRefOpen.current.fastSeek(0);
-      audioRefClose.current.play();
-    } else {
-      audioRefOpen.current.play();
-      audioRefClose.current.pause();
-      audioRefClose.current.fastSeek && audioRefClose.current.fastSeek(0);
-    }
   }
 
 

@@ -19,7 +19,7 @@ export default function Layout({ children }) {
         <title>🏠🔒⚙️ Home</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta httpEquiv="refresh" content="600"></meta>
+        {/* <meta httpEquiv="refresh" content="600"></meta> */}
       </Head>
       <NavBar />
       <div className="flex flex-row flex-grow max-h-full overflow-y-hidden">

@@ -10,7 +10,7 @@ export default function DoorSummary({ doors }) {
                         className="rounded-full bg-transparent border border-primary-dark text-secondary-dark h-10 w-full m-2 flex items-center pl-3"
                     >
                         <img
-                            src={door.state.open ? "/opened-door.png" : "/closed-door.png"}
+                            src={door.open ? "/opened-door.png" : "/closed-door.png"}
                             className="h-5 ml-2 pr-3"
                         ></img>
                         {door.name}

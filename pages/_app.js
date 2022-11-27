@@ -6,8 +6,8 @@ import { LightGroupsProvider } from "../hooks/useLightGroups";
 import { LightListProvider } from "../hooks/useLightList";
 import { registerSensorCallback } from "../services/subscriber";
 import { CamerasProvider } from "../hooks/useCameras";
-import constants from "../constants/constants";
-import Head from "next/head"
+import { CAMERA_WS_URI, IOT_MQTT_PORT, IOT_MQTT_URI } from "../constants/constants";
+import mqtt from "mqtt";
 
 function MyApp({ Component, pageProps }) {
   const [lightGroups, setLightGroups] = useState([]);
@@ -17,8 +17,35 @@ function MyApp({ Component, pageProps }) {
   const [cameraList, setCameraList] = useState([])
   const audioRefOpen = useRef(null);
   const audioRefClose = useRef(null);
+  let mqtt1
+
+  const parseDevice = (dev) => {
+    console.log(dev)
+    const { friendly_name, ieee_address } = dev
+    if (friendly_name.includes("door/")) {
+      console.log("----", friendly_name.split("/")[1])
+      if (!doorSensors.some(({ name }) => name === friendly_name.split("/")[1])) {
+        console.log("adding door sensor:", friendly_name.split("/")[1])
+        setDoorSensors(old => [{
+          id: ieee_address,
+          name: friendly_name.split("/")[1],
+          open: false
+        }, ...old])
+      }
+      // mqtt1.publish(`zigbee2mqtt/${friendly_name}/get`, JSON.stringify({
+      //   battery: "",
+      //   contact: "",
+      //   device_temperature: "",
+      //   voltage: "",
+      //   power_outage_count: "",
+      //   linkquality: ""
+      // }))
+    }
+  }
+
+  //Connect to pi's redis cameras
   const connect = () => {
-    let ws = new WebSocket(`ws://${constants.CAMERA_WS_URI}`);
+    let ws = new WebSocket(`ws://${CAMERA_WS_URI}`);
 
     // Set event handlers.
     ws.onopen = function () {
@@ -30,7 +57,6 @@ function MyApp({ Component, pageProps }) {
       try {
         data = JSON.parse(e.data);
       } catch (e) {
-        console.error();
       }
 
       if (data.isVideo) {
@@ -64,94 +90,55 @@ function MyApp({ Component, pageProps }) {
     };
   }
 
-  useEffect(() => {
-    fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/groups/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((lightState) => {
-        setLightGroups(
-          Object.keys(lightState).map((key) => ({
-            id: key,
-            ...lightState[key],
-          }))
-        );
-      });
-    fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/lights/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((lightState) => {
-        setLightList(
-          Object.keys(lightState)
-            .filter((key) => key != 1)
-            .map((key) => ({ id: key, ...lightState[key] }))
-        );
-      });
-    fetch(`http://${constants.IOT_REST_URI}/api/F83A894B24/sensors/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((lightState) => {
-        let allSensors = Object.keys(lightState).map((key) => ({
-          id: key,
-          ...lightState[key],
-        }));
-        setDoorSensors(
-          allSensors.filter((sensor) => sensor.type === "ZHAOpenClose")
-        );
-        setSwitches(allSensors.filter((sensor) => sensor.type === "ZHASwitch"));
-      });
-  }, []);
+  //Currently functional with z2m
+  const checkDoorCallback = (topic, msg) => {
+    const [, , doorName] = topic.split('/')
+    const { battery, contact, device_temperature, linkquality, power_outage_count, voltage } = JSON.parse(msg.toString())
 
-  const checkDoorCallback = (data) => {
-    let actuatedDoor = doorSensors.filter((door) => door.id === data.id);
-    if (
-      actuatedDoor.length > 0 &&
-      data.r === "sensors" &&
-      data.state &&
-      !data.state.buttonevent &&
-      data.state.open != actuatedDoor[0].state.open
-    ) {
+    setDoorSensors(old => {
+      const doorToUpdate = old.find(({ name }) => name === doorName)
+      console.log(old)
+      return [{
+        ...doorToUpdate,
+        battery: battery,
+        lastUpdated: new Date().toLocaleTimeString(),
+        open: !contact,
+      }, ...old.filter(({ name }) => name !== doorName)]
+    })
 
-      actuatedDoor[0].state.open = data.state.open
-      actuatedDoor[0].state.lastupdated = data.state.lastupdated
-      doorSensors[doorSensors.findIndex((door) => door.id === data.id)] = actuatedDoor[0]
-      setDoorSensors([...doorSensors])
-
-      if (data.state.open) {
-        audioRefOpen.current.play();
-        audioRefClose.current.pause();
-        audioRefClose.current.fastSeek && audioRefClose.current.fastSeek(0);
-        // setDoorSensors()
-        // setOpened(true);
-      } else {
-        audioRefOpen.current.pause();
-        audioRefClose.current.fastSeek && audioRefOpen.current.fastSeek(0);
-        audioRefClose.current.play();
-        // setOpened(false);
-      }
+    if (contact) {
+      audioRefOpen.current.pause();
+      audioRefClose.current.fastSeek && audioRefOpen.current.fastSeek(0);
+      audioRefClose.current.play();
+    } else {
+      audioRefOpen.current.play();
+      audioRefClose.current.pause();
+      audioRefClose.current.fastSeek && audioRefClose.current.fastSeek(0);
     }
   }
 
-  useEffect(() => {
-    registerSensorCallback("masterDoor", (data) => {
-      checkDoorCallback(data)
-    });
-  }, [doorSensors])
 
-  //Attach to websox for camera feed(s)
+  //Attach to websox for camera feed(s) - still python ws from the pis
   useEffect(() => {
-    connect()
+
+    mqtt1 = mqtt.connect(`ws://${IOT_MQTT_URI}:${IOT_MQTT_PORT}`, {})
+    mqtt1.on("connect", () => {
+      console.log("CONNECTED! :S")
+      mqtt1.subscribe("zigbee2mqtt/#", (...args) => { console.log(args) })
+    })
+    mqtt1.on("message", (topic, msg) => {
+      //A device was added/removed or it's our first connection.
+      if (topic.includes("/bridge/devices")) {
+        console.log(topic, JSON.stringify(JSON.parse(msg.toString()), null, 2))
+        JSON.parse(msg.toString()).forEach(parseDevice)
+      }
+      if (topic.includes("/door/")) {
+        console.log("incoming message", topic, msg.toString())
+        checkDoorCallback(topic, msg)
+      }
+    })
+
+    connect();
   }, []);
 
   return (

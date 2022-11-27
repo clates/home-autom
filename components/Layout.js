@@ -6,12 +6,12 @@ import { setWS } from "../services/subscriber";
 import NavBar from "../components/NavBar";
 import { useDoorSensorsContext } from "../hooks/useDoorSensors";
 import { useLightGroupsContext } from "../hooks/useLightGroups";
-import constants from "../constants/constants";
+import {CAMERA_WS_URI} from "../constants/constants";
 
 export default function Layout({ children }) {
   const doorSensors = useDoorSensorsContext();
   const lightGroups = useLightGroupsContext();
-  useEffect(() => setWS(new WebSocket("ws://" + constants.CAMERA_WS_URI)), []);
+  // useEffect(() => setWS(new WebSocket("ws://" + CAMERA_WS_URI)), []);
 
   return (
     <div className="flex flex-col min-h-screen max-h-screen">

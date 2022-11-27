@@ -21,12 +21,12 @@ export default function Home() {
       <div className="flex-grow w-11/12 grid xl:grid-cols-4 grid-cols-2 hidden md:grid ">
         {doorSensors.map((doorSensor) => (
           <DoorSensorTile
-            key={doorSensor.uniqueid}
+            key={doorSensor.uniqueId}
             id={doorSensor.id}
-            battery={doorSensor.config.battery}
+            battery={doorSensor.battery}
             name={doorSensor.name}
-            lastUpdated={doorSensor.state.lastupdated}
-            open={doorSensor.state.open}
+            lastUpdated={doorSensor.lastUpdated}
+            open={doorSensor.open}
           />
         ))}
       </div>

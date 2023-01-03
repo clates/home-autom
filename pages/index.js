@@ -13,7 +13,7 @@ export default function Home() {
   const cameraList = useCamerasContext();
   return (
     <>
-      <div className="grid w-11/12 flex-grow grid-cols-1 md:grid-cols-2 xl:grid-cols-4 ">
+      <div className="w-11/12 flex-grow">
         {cameraList.map((camera) => (
           <CameraTile
             key={camera.cameraName}
@@ -22,7 +22,7 @@ export default function Home() {
           />
         ))}
       </div>
-      <div className="grid hidden w-11/12 flex-grow grid-cols-2 md:grid xl:grid-cols-4 ">
+      {/* <div className="grid hidden w-11/12 flex-grow grid-cols-2 md:grid xl:grid-cols-4 ">
         {doorSensors.map((doorSensor) => (
           <DoorSensorTile
             key={doorSensor.uniqueId}
@@ -50,7 +50,7 @@ export default function Home() {
           />
         ))}
       </div>
-      <ArmedSystemTile />
+      <ArmedSystemTile /> */}
     </>
   );
 }

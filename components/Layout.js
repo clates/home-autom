@@ -32,7 +32,7 @@ export default function Layout({ children }) {
             </div>
           </div>
         ) : null}
-        <div className="flex flex-grow flex-col items-center overflow-y-scroll">
+        <div className="flex flex-grow flex-col items-center">
           {children}
         </div>
       </div>

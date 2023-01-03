@@ -5,7 +5,7 @@ export default function CameraTile({ cameraName, data }) {
   const [theatreMode, setTheatreMode] = useToggle();
 
   return (
-    <div className="h-full w-full md:col-span-1 md:row-span-1 lg:col-span-2 lg:row-span-2">
+    <div className="h-full w-full col-span-2 row-span-2">
       {theatreMode && (
         <div
           style={{ top: 0, left: 0, position: "absolute" }}

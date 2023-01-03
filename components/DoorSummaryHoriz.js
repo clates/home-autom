@@ -19,7 +19,7 @@ export default function DoorSummary({ doors }) {
           return (
             <div
               key={door.id}
-              className="m-2 flex h-10 w-56 items-center rounded-full border border-primary-dark bg-transparent pl-3 text-secondary-dark"
+              className={`m-2 flex h-10 w-56 items-center rounded-full border border-primary-dark bg-transparent pl-3 text-secondary-dark bg-gradient-to-r ${door.open ? "from-red-200" : "from-green-200"} via-primary-light` }
             >
               <img
                 src={door.open ? "/opened-door.png" : "/closed-door.png"}

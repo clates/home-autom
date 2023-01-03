@@ -1,8 +1,8 @@
 export default function GenericTile(props) {
   return (
-    <div className="bg-primary-light shadow-xl shadow-outline rounded-md h-auto p-4 flex flex-col items-center m-2">
-      <div className="bg-primary-dark rounded-md w-full text-center mb-5">
-        <span className="text-sm font-semibold leading-relaxed inline-block py-2 whitespace-no-wrap uppercase text-secondary-light">
+    <div className="shadow-outline m-2 flex h-auto flex-col items-center rounded-md bg-primary-light p-4 shadow-xl">
+      <div className="mb-5 w-full rounded-md bg-primary-dark text-center">
+        <span className="whitespace-no-wrap inline-block py-2 text-sm font-semibold uppercase leading-relaxed text-secondary-light">
           {props.title}
         </span>
       </div>

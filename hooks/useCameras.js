@@ -6,16 +6,14 @@ const CamerasContext = createContext();
 
 // Export Provider.
 export function CamerasProvider(props) {
-    const { value, children } = props;
+  const { value, children } = props;
 
-    return (
-        <CamerasContext.Provider value={value}>
-            {children}
-        </CamerasContext.Provider>
-    );
+  return (
+    <CamerasContext.Provider value={value}>{children}</CamerasContext.Provider>
+  );
 }
 
 // Export useContext Hook.
 export function useCamerasContext() {
-    return useContext(CamerasContext);
+  return useContext(CamerasContext);
 }

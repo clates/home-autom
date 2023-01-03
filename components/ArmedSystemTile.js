@@ -4,7 +4,7 @@ import useToggle from "../hooks/useToggle";
 import {
   setLightingGroupState,
   setLightState,
-  goBills
+  goBills,
 } from "../services/lightsControl";
 import { registerSensorCallback } from "../services/subscriber";
 
@@ -20,7 +20,7 @@ export default function ArmedSystemTile() {
   useEffect(() => {
     registerSensorCallback("switch1", (data) => {
       if (data.id === "10" && data.state) {
-        console.log(data.state.buttonevent + " event")
+        console.log(data.state.buttonevent + " event");
         //Double tab Bills
         if (data.state.buttonevent === 1001) {
           audioRefBills.current.play();
@@ -98,11 +98,17 @@ export default function ArmedSystemTile() {
           return;
         }
 
-        //Toss events - 7008 
+        //Toss events - 7008
         if (data.state.buttonevent === 7008) {
           //"warm"
           audioRefPoker.current.play();
-          [2, 3, 4, 5, 6, 7, 8, 9].forEach(id => setLightState(id, Math.floor(Math.random() * 65000), Math.floor(Math.random() * 100)))
+          [2, 3, 4, 5, 6, 7, 8, 9].forEach((id) =>
+            setLightState(
+              id,
+              Math.floor(Math.random() * 65000),
+              Math.floor(Math.random() * 100)
+            )
+          );
           return;
         }
       }
@@ -136,7 +142,7 @@ export default function ArmedSystemTile() {
   let src = armed ? "/alarm-active.png" : "/alarm-inactive.svg";
   return (
     <GenericTile title="Alarm System">
-      <img src={src} className="h-40 ml-2"></img>
+      <img src={src} className="ml-2 h-40"></img>
       <audio ref={audioRef} src={"/car-lock-sound-effect.mp3"} />
       <audio ref={audioRefPop} src={"/pop-19.wav"} />
       <audio ref={audioRefPositive} src={"/gentle_pop.wav"} />

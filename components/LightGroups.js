@@ -1,8 +1,6 @@
 import GenericTile from "./GenericTile";
 import { useState } from "react";
-import {
-  setLightingGroupState, goBills
-} from "../services/lightsControl";
+import { setLightingGroupState, goBills } from "../services/lightsControl";
 
 export default function LightGroups({ groups }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -24,12 +22,16 @@ export default function LightGroups({ groups }) {
     setLightingGroupState(activeGroup, color, 0, brightness, saturation, ct);
   };
 
+  if (groups?.length === 0) {
+    return null;
+  }
+
   return (
     <>
       {menuOpen && (
         <div
           style={{ top: menuPos[1], left: menuPos[0], position: "absolute" }}
-          className="rounded-3xl border-4 border-primary-dark bg-primary-light w-80 flex flex-col justify-center items-center p-3"
+          className="flex w-80 flex-col items-center justify-center rounded-3xl border-4 border-primary-dark bg-primary-light p-3"
         >
           {[
             { name: "red", hue: 1125 },
@@ -42,9 +44,14 @@ export default function LightGroups({ groups }) {
             return (
               <div
                 key={color.name}
-                className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-11/12 m-2 flex justify-center items-center"
+                className="m-2 flex h-10 w-11/12 items-center justify-center rounded-full border border-primary-dark bg-transparent text-primary-dark text-primary-dark hover:bg-primary-dark hover:text-secondary-light"
                 onClick={() => {
-                  setLight(color.hue, color.brightness, color.saturation, color.ct);
+                  setLight(
+                    color.hue,
+                    color.brightness,
+                    color.saturation,
+                    color.ct
+                  );
                   setMenuOpen(false);
                 }}
               >
@@ -56,7 +63,7 @@ export default function LightGroups({ groups }) {
             );
           })}
           <div
-            className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-11/12 m-2 flex justify-center items-center"
+            className="m-2 flex h-10 w-11/12 items-center justify-center rounded-full border border-primary-dark bg-transparent text-primary-dark text-primary-dark hover:bg-primary-dark hover:text-secondary-light"
             onClick={() => {
               goBills(activeGroup);
               setMenuOpen(false);
@@ -72,7 +79,7 @@ export default function LightGroups({ groups }) {
           return (
             <div
               key={group.id}
-              className="rounded-full bg-transparent border border-primary-dark text-primary-dark hover:text-secondary-light hover:bg-primary-dark text-primary-dark h-10 w-full m-2 flex items-center pl-3"
+              className="m-2 flex h-10 w-full items-center rounded-full border border-primary-dark bg-transparent pl-3 text-primary-dark text-primary-dark hover:bg-primary-dark hover:text-secondary-light"
               onClick={(e) => {
                 e.preventDefault();
                 handleClick(e.pageX, e.pageY, group.id);

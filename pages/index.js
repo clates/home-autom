@@ -13,12 +13,16 @@ export default function Home() {
   const cameraList = useCamerasContext();
   return (
     <>
-      <div className="flex-grow w-11/12 grid md:grid-cols-2 xl:grid-cols-4 grid-cols-1 ">
-        {cameraList.map(camera => (
-          <CameraTile key={camera.cameraName} cameraName={camera.cameraName} data={camera.data} />
+      <div className="grid w-11/12 flex-grow grid-cols-1 md:grid-cols-2 xl:grid-cols-4 ">
+        {cameraList.map((camera) => (
+          <CameraTile
+            key={camera.cameraName}
+            cameraName={camera.cameraName}
+            data={camera.data}
+          />
         ))}
       </div>
-      <div className="flex-grow w-11/12 grid xl:grid-cols-4 grid-cols-2 hidden md:grid ">
+      <div className="grid hidden w-11/12 flex-grow grid-cols-2 md:grid xl:grid-cols-4 ">
         {doorSensors.map((doorSensor) => (
           <DoorSensorTile
             key={doorSensor.uniqueId}
@@ -30,12 +34,10 @@ export default function Home() {
           />
         ))}
       </div>
-      <div className="flex-grow w-11/12 inline md:hidden grid-cols-2 ">
-        <DoorSummary
-          doors={doorSensors}
-        />
+      <div className="inline w-11/12 flex-grow grid-cols-2 md:hidden ">
+        <DoorSummary doors={doorSensors} />
       </div>
-      <div className="flex-grow content-evenly w-11/12 hidden md:grid grid xl:grid-cols-5 md:grid-cols-3 grid-cols-2 ">
+      <div className="grid hidden w-11/12 flex-grow grid-cols-2 content-evenly md:grid md:grid-cols-3 xl:grid-cols-5 ">
         {lightList.map((light) => (
           <LightTile
             key={light.id}

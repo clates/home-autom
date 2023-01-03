@@ -2,13 +2,17 @@ import CameraTile from "../components/CameraTile";
 import { useCamerasContext } from "../hooks/useCameras";
 
 export default function Cameras() {
-    const cameraList = useCamerasContext();
+  const cameraList = useCamerasContext();
 
-    return (
-        <div className="flex-grow w-11/12 grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-3 sm:grid-cols-1 ">
-            {cameraList.map(camera => (
-                <CameraTile key={camera.cameraName} cameraName={camera.cameraName} data={camera.data} />
-            ))}
-        </div>
-    )
+  return (
+    <div className="grid w-11/12 flex-grow sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-4 ">
+      {cameraList.map((camera) => (
+        <CameraTile
+          key={camera.cameraName}
+          cameraName={camera.cameraName}
+          data={camera.data}
+        />
+      ))}
+    </div>
+  );
 }

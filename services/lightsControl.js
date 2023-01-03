@@ -1,6 +1,12 @@
-import {IOT_REST_URI} from "../constants/constants";
+import { IOT_REST_URI } from "../constants/constants";
 
-export function setLightState(id, hue, brightness = 100, saturation = 100, ct = 0) {
+export function setLightState(
+  id,
+  hue,
+  brightness = 100,
+  saturation = 100,
+  ct = 0
+) {
   fetch(`http://${IOT_REST_URI}/api/F83A894B24/lights/${id}/state`, {
     method: "PUT",
     headers: {
@@ -23,7 +29,7 @@ export function setLightingGroupState(
   ct = null
 ) {
   console.log("Setting Lighting Group State", id, hue, ct);
-  const ctCheck = ct ? { ct: ct } : {}
+  const ctCheck = ct ? { ct: ct } : {};
   fetch(`http://${IOT_REST_URI}/api/F83A894B24/groups/${id}/action`, {
     method: "PUT",
     headers: {
@@ -90,7 +96,7 @@ export function pulseLight(id) {
   }, 100000);
 }
 export function goBills(id) {
-  console.log("GO BILLS!")
+  console.log("GO BILLS!");
 
   const storeCurrent = () =>
     fetch(`http://192.168.88.212/api/F83A894B24/groups/${id}/scenes/1/store`, {
@@ -100,98 +106,104 @@ export function goBills(id) {
       },
     });
 
-  const setScene = sceneId =>
-    fetch(`http://192.168.88.212/api/F83A894B24/groups/${id}/scenes/${sceneId}/recall`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const setScene = (sceneId) =>
+    fetch(
+      `http://192.168.88.212/api/F83A894B24/groups/${id}/scenes/${sceneId}/recall`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-  const redScene = 2
-  const blueScene = 3
+  const redScene = 2;
+  const blueScene = 3;
 
   let toggle = true;
   const redBlueAlternate = () => {
-    toggle ? setScene(redScene) : setScene(blueScene)
-    console.log(toggle ? "Setting to blue" : "Setting to red")
-    toggle = !toggle
-  }
+    toggle ? setScene(redScene) : setScene(blueScene);
+    console.log(toggle ? "Setting to blue" : "Setting to red");
+    toggle = !toggle;
+  };
 
-  const firstSceneList = [4, 5, 6, 7, 8]
-  const secondSceneList = [4, 5, 6, 7, 8]
+  const firstSceneList = [4, 5, 6, 7, 8];
+  const secondSceneList = [4, 5, 6, 7, 8];
   let scenePointer = 0;
-  const rotateThroughScenList = list => {
-    setScene(list[scenePointer % list.length])
-    scenePointer = scenePointer + 1
-  }
+  const rotateThroughScenList = (list) => {
+    setScene(list[scenePointer % list.length]);
+    scenePointer = scenePointer + 1;
+  };
 
-  const execute = executionList => {
+  const execute = (executionList) => {
     if (executionList.length === 0) {
       return;
     }
-    const currentExecution = executionList.shift()
-    const intervId = setInterval(currentExecution.fn, currentExecution.interval)
+    const currentExecution = executionList.shift();
+    const intervId = setInterval(
+      currentExecution.fn,
+      currentExecution.interval
+    );
     setTimeout(() => {
-      clearInterval(intervId)
+      clearInterval(intervId);
       execute(executionList);
-    }, currentExecution.totalTime)
-  }
+    }, currentExecution.totalTime);
+  };
 
-  //Capture the current state as the first bit 
+  //Capture the current state as the first bit
   storeCurrent();
 
-  execute(
-    [
-      {
-        fn: () => {
-          () => {/*do nothing*/ };
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 1 * 1000,
+  execute([
+    {
+      fn: () => {
+        () => {
+          /*do nothing*/
+        };
       },
-      {
-        fn: () => {
-          redBlueAlternate();
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 7 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 1 * 1000,
+    },
+    {
+      fn: () => {
+        redBlueAlternate();
       },
-      {
-        fn: () => {
-          rotateThroughScenList(firstSceneList);
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 15 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 7 * 1000,
+    },
+    {
+      fn: () => {
+        rotateThroughScenList(firstSceneList);
       },
-      {
-        fn: () => {
-          rotateThroughScenList(secondSceneList);
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 15 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 15 * 1000,
+    },
+    {
+      fn: () => {
+        rotateThroughScenList(secondSceneList);
       },
-      {
-        fn: () => {
-          rotateThroughScenList(firstSceneList);
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 15 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 15 * 1000,
+    },
+    {
+      fn: () => {
+        rotateThroughScenList(firstSceneList);
       },
-      {
-        fn: () => {
-          redBlueAlternate();
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 7 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 15 * 1000,
+    },
+    {
+      fn: () => {
+        redBlueAlternate();
       },
-      {
-        fn: () => {
-          setLightingGroupState(id, 0, 0, 75, 0, 400)
-        },
-        interval: (1 / 2) * 1000,
-        totalTime: 1 * 1000,
+      interval: (1 / 2) * 1000,
+      totalTime: 7 * 1000,
+    },
+    {
+      fn: () => {
+        setLightingGroupState(id, 0, 0, 75, 0, 400);
       },
-    ]
-  )
+      interval: (1 / 2) * 1000,
+      totalTime: 1 * 1000,
+    },
+  ]);
 }

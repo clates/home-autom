@@ -18,7 +18,9 @@ export function setWS(wsIn) {
       console.error(e);
     }
     if (sensorData && sensorData.r === "sensors") {
-      Object.keys(sensorCallbacks).forEach(key => sensorCallbacks[key](sensorData))
+      Object.keys(sensorCallbacks).forEach((key) =>
+        sensorCallbacks[key](sensorData)
+      );
     }
     if (sensorData && sensorData.r === "lights") {
       lightsCallbacks.forEach((cb) => {

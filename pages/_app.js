@@ -73,25 +73,25 @@ function MyApp({ Component, pageProps }) {
     [setDoorSensors]
   );
 
+  const parseDevice = useCallback((dev) => {
+    const { friendly_name, ieee_address } = dev;
+    if (friendly_name.includes("door/")) {
+      const doorName = friendly_name.split("/")[1];
+      if (!doorSensors.some(({ id }) => id === ieee_address)) {
+        setDoorSensors((old) => [
+          {
+            id: ieee_address,
+            name: doorName,
+            open: false,
+          },
+          ...old,
+        ]);
+      }
+    }
+  }, [doorSensors, setDoorSensors])
+
   //Attach to websox for camera feed(s) - still python ws from the pis
   useEffect(() => {
-    const parseDevice = (dev) => {
-      const { friendly_name, ieee_address } = dev;
-      if (friendly_name.includes("door/")) {
-        const doorName = friendly_name.split("/")[1];
-        console.log(doorName, doorSensors)
-        if (!doorSensors.some(({ name }) => name === doorName)) {
-          setDoorSensors((old) => [
-            {
-              id: ieee_address,
-              name: friendly_name.split("/")[1],
-              open: false,
-            },
-            ...old,
-          ]);
-        }
-      }
-    };
 
     //Connect to pi's redis cameras
     const connect = () => {
@@ -158,7 +158,8 @@ function MyApp({ Component, pageProps }) {
     });
     mqtt1.on("message", (topic, msg) => {
       //A device was added/removed or it's our first connection.
-      if (topic.includes("/bridge/devices") && doorSensors.length === 0) {
+      if (topic.includes("/bridge/devices")) {
+        console.log("Adding additional doors I guess??")
         // console.log(topic, JSON.stringify(JSON.parse(msg.toString()), null, 2))
         JSON.parse(msg.toString()).forEach(parseDevice);
       }

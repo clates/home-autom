@@ -77,6 +77,7 @@ function MyApp({ Component, pageProps }) {
     const { friendly_name, ieee_address } = dev;
     if (friendly_name.includes("door/")) {
       const doorName = friendly_name.split("/")[1];
+      console.log("Attempting to add...", dev, doorSensors)
       if (!doorSensors.some(({ id }) => id === ieee_address)) {
         setDoorSensors((old) => [
           {

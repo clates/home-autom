@@ -47,16 +47,19 @@ function MyApp({ Component, pageProps }) {
         voltage,
       } = JSON.parse(msg.toString());
 
+      console.log(doorName, contact)
+
       setDoorSensors((old) => {
+
         const doorToUpdate = old.find(({ name }) => name === doorName);
 
         if (contact !== doorToUpdate.contact) {
           if (contact) {
             playClose();
           } else {
-            console.log("Calling playOpen:", playOpen);
             playOpen();
           }
+          return old
         }
 
         return [

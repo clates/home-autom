@@ -21,6 +21,12 @@ function MyApp({ Component, pageProps }) {
   const audioRefClose = useRef(null);
   let mqtt1;
 
+  useEffect(() => {
+    //idfk bro
+    if (doorSensors.length > 4) {
+      window.location.reload();
+    }
+  }, [doorSensors])
   const playOpen = useCallback(() => {
     console.log("Opening!");
     audioRefOpen.current.play();
